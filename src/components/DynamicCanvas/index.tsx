@@ -41,7 +41,6 @@ const DynamicCanvas: FC<DynamicCanvasProps> = (props) => {
       ctx.font = '10px Arial';
       ctx.fillStyle = 'red';
       writingCoordinates.map((singleCoordinate) => {
-        console.log(singleCoordinate);
         ctx.fillText(
           inputValue[singleCoordinate.name],
           singleCoordinate.x,

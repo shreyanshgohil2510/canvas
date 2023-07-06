@@ -2,7 +2,6 @@ import toast from 'react-hot-toast';
 // Creating the initial state object for write something
 export const createTextInitialState = (coordinatesObject: any) => {
   const INITIALSTATE: any = {};
-  console.log(coordinatesObject);
   for (let i = 0; i < coordinatesObject.length; i++) {
     INITIALSTATE[coordinatesObject[i].name] = '';
   }

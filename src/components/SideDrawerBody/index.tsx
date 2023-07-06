@@ -15,7 +15,6 @@ const SideDrawerBody: FC<SideDrawerBodyProps> = (props) => {
     toastText('User created successfully', 'success');
     closeDrawerByAnimation();
     addCoordinateHandler(values);
-    console.log('Success:', values);
   };
 
   // If form fails
