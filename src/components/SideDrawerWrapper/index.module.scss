@@ -1,0 +1,58 @@
+@keyframes SlideIn {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes SlideOut {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.side-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  max-width: 500px;
+  width: 100%;
+  background: white;
+  z-index: 1;
+  &.slide-in {
+    animation: SlideIn 0.5s forwards;
+  }
+  &.slide-out {
+    animation: SlideOut 0.5s forwards;
+  }
+  &__header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    &--heading {
+      font-size: 16px;
+    }
+    &--close-icon {
+      cursor: pointer;
+      height: 10px;
+      width: 10px;
+    }
+  }
+  &__body {
+    height: calc(100% - 63px);
+  }
+}
+
+.side-drawer__backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
