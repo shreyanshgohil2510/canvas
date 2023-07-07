@@ -6,7 +6,7 @@ export default function App() {
   // Inits
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Zoom />} />
       <Route path="/zoom" element={<Zoom />} />
       <Route path="/practice" element={<Practice />} />
     </Routes>

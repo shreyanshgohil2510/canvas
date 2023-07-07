@@ -92,11 +92,6 @@ const Canvas: FC<CanvasProps> = (props) => {
           </div>
         </div>
       </div>
-      <div>
-        {!(mouseLocation.x === 0 && mouseLocation.y === 0) && (
-          <ToolTip x={mouseLocation.x} y={mouseLocation.y} />
-        )}
-      </div>
     </React.Fragment>
   );
 };
