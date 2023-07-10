@@ -1,10 +1,8 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { CanvasProps } from './types';
-import ToolTip from '../Tooltip';
 
 const Canvas: FC<CanvasProps> = (props) => {
-  const [mouseLocation, setMouseLocation] = useState({ x: 0, y: 0 });
-  const canvas = useRef<HTMLCanvasElement | any>(null);
+  // const canvas = useRef<HTMLCanvasElement | any>(null);
   const {
     canvasHeight,
     canvasWidth,
@@ -12,13 +10,14 @@ const Canvas: FC<CanvasProps> = (props) => {
     coordinateDetails,
     canvasPosition,
     resetCanvasPosition,
+    canvasRef,
   } = props;
 
   // Canvas drawing
   const drawCanvas = () => {
     // Creating writing context
-    const ctx = canvas.current.getContext('2d');
-    ctx.clearRect(0, 0, 800, 500);
+    const ctx = canvasRef.current.getContext('2d');
+    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     ctx.save();
     const base_image = new Image();
     base_image.src = imageUrl;
@@ -29,7 +28,6 @@ const Canvas: FC<CanvasProps> = (props) => {
       ctx.globalCompositeOperation = 'destination-over';
       ctx.font = '11px Arial';
       ctx.fillStyle = '#000';
-      ctx.scale(1, 1.3);
       // Writing on the image
       for (const [key, objectValue] of Object.entries(
         coordinateDetails
@@ -50,14 +48,10 @@ const Canvas: FC<CanvasProps> = (props) => {
     };
   };
 
-  const mouseMoveHandler = useCallback((e: any) => {
-    const { clientX, clientY } = e;
-    setMouseLocation({ x: clientX, y: clientY });
-  }, []);
-
   useEffect(() => {
     drawCanvas();
   }, []);
+
   return (
     <React.Fragment>
       <div className="flex">
@@ -71,19 +65,12 @@ const Canvas: FC<CanvasProps> = (props) => {
             alt=""
             className="h-[432px] w-[768px]"
           />
-          <div className="w-[669px] h-[348px] overflow-hidden absolute top-[22px] left-[49px]">
+          <div className="w-[663px] h-[348px] overflow-hidden absolute top-[22px] left-[53px]">
             <canvas
-              ref={canvas}
+              ref={canvasRef}
               width={canvasWidth}
               height={canvasHeight}
-              className=" "
-              onMouseOver={() => {
-                window.addEventListener('mousemove', mouseMoveHandler);
-              }}
-              onMouseOut={() => {
-                setMouseLocation({ x: 0, y: 0 });
-                window.removeEventListener('mousemove', mouseMoveHandler);
-              }}
+              className="canvas"
               style={{
                 transition: 'all 1s',
                 transform: `translate(${canvasPosition.x}px , ${canvasPosition.y}px)`,
