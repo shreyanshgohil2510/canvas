@@ -7,4 +7,5 @@ export interface CanvasProps {
   scaleValue?: any;
   changeScaleHandler?: any;
   resetCanvasPosition?: any;
+  canvasContainerRef?: any;
 }

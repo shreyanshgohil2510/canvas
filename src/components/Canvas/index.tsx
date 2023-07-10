@@ -1,18 +1,19 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import { CanvasProps } from './types';
-import ToolTip from '../Tooltip';
 
 const Canvas: FC<CanvasProps> = (props) => {
-  const [mouseLocation, setMouseLocation] = useState({ x: 0, y: 0 });
+  const fontUrl = `${process.env.PUBLIC_URL}/fonts/AvenirHeavy.woff2`;
   const canvas = useRef<HTMLCanvasElement | any>(null);
   const {
     canvasHeight,
     canvasWidth,
     imageUrl,
     coordinateDetails,
-    canvasPosition,
     resetCanvasPosition,
+    canvasContainerRef,
   } = props;
+
+  const customFont = new FontFace('Avenir', `url(${fontUrl})`);
 
   // Canvas drawing
   const drawCanvas = () => {
@@ -22,42 +23,39 @@ const Canvas: FC<CanvasProps> = (props) => {
     ctx.save();
     const base_image = new Image();
     base_image.src = imageUrl;
-
     // Waiting for image loading
     base_image.onload = () => {
-      // Setting font configuration
-      ctx.globalCompositeOperation = 'destination-over';
-      ctx.font = '11px Arial';
-      ctx.fillStyle = '#000';
-      ctx.scale(1, 1.3);
-      // Writing on the image
-      for (const [key, objectValue] of Object.entries(
-        coordinateDetails
-      ) as any) {
-        if (key === 'table') {
-          objectValue.map((singleProduct: any) => {
-            for (const [tableKey, tableValue] of Object.entries(
-              singleProduct
-            ) as any) {
-              ctx.fillText(tableValue.value, tableValue.x, tableValue.y + 11);
-            }
-          });
-        } else {
-          ctx.fillText(objectValue.value, objectValue.x, objectValue.y + 11);
+      customFont.load().then(() => {
+        ctx.font = '12px Avenir ';
+        ctx.globalCompositeOperation = 'destination-over';
+        ctx.fillStyle = '#000';
+        ctx.scale(1, 1);
+        // Writing on the image
+        for (const [key, objectValue] of Object.entries(
+          coordinateDetails
+        ) as any) {
+          if (key === 'table') {
+            objectValue.map((singleProduct: any) => {
+              for (const [tableKey, tableValue] of Object.entries(
+                singleProduct
+              ) as any) {
+                ctx.fillText(tableValue.value, tableValue.x, tableValue.y + 11);
+              }
+            });
+          } else {
+            ctx.fillText(objectValue.value, objectValue.x, objectValue.y + 11);
+          }
         }
-      }
-      ctx.drawImage(base_image, 0, 0, canvasWidth, canvasHeight);
+        ctx.drawImage(base_image, 0, 0, canvasWidth, canvasHeight);
+      });
+      // Setting font configuration
     };
   };
-
-  const mouseMoveHandler = useCallback((e: any) => {
-    const { clientX, clientY } = e;
-    setMouseLocation({ x: clientX, y: clientY });
-  }, []);
 
   useEffect(() => {
     drawCanvas();
   }, []);
+
   return (
     <React.Fragment>
       <div className="flex">
@@ -71,24 +69,21 @@ const Canvas: FC<CanvasProps> = (props) => {
             alt=""
             className="h-[432px] w-[768px]"
           />
-          <div className="w-[669px] h-[348px] overflow-hidden absolute top-[22px] left-[49px]">
-            <canvas
-              ref={canvas}
-              width={canvasWidth}
-              height={canvasHeight}
-              className=" "
-              onMouseOver={() => {
-                window.addEventListener('mousemove', mouseMoveHandler);
-              }}
-              onMouseOut={() => {
-                setMouseLocation({ x: 0, y: 0 });
-                window.removeEventListener('mousemove', mouseMoveHandler);
-              }}
-              style={{
-                transition: 'all 1s',
-                transform: `translate(${canvasPosition.x}px , ${canvasPosition.y}px)`,
-              }}
-            />
+          <div
+            className="w-[662px] max-h-[366px] overflow-auto absolute top-[22px] left-[53px]"
+            ref={canvasContainerRef}
+          >
+            <div className="problem">
+              <canvas
+                ref={canvas}
+                width={canvasWidth}
+                height={canvasHeight}
+                className=" h-[750px]"
+                style={{
+                  transition: 'all 1s',
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
