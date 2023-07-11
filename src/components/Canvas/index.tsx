@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useEffect, useRef, useCallback } from 'react';
 import { CanvasProps } from './types';
 
 const Canvas: FC<CanvasProps> = (props) => {
@@ -12,7 +12,7 @@ const Canvas: FC<CanvasProps> = (props) => {
     resetCanvasPosition,
     canvasContainerRef,
   } = props;
-
+  let startX: any, startY: any, scrollX: any, scrollY: any;
   const customFont = new FontFace('Avenir', `url(${fontUrl})`);
 
   // Canvas drawing
@@ -51,9 +51,32 @@ const Canvas: FC<CanvasProps> = (props) => {
       // Setting font configuration
     };
   };
+  const mouseMoveHandler = useCallback((event: any) => {
+    const dx = event.clientX - startX;
+    const dy = event.clientY - startY;
+    canvasContainerRef.current.scrollLeft = scrollX - dx;
+    canvasContainerRef.current.scrollTop = scrollY - dy;
+  }, []);
+
+  const mouseUpHandler = () => {
+    window.removeEventListener('mousemove', mouseMoveHandler);
+  };
+
+  const mouseDownHandler = (event: any) => {
+    startX = event.clientX;
+    startY = event.clientY;
+    scrollX = canvasContainerRef.current.scrollLeft;
+    scrollY = canvasContainerRef.current.scrollTop;
+    window.addEventListener('mousemove', mouseMoveHandler);
+  };
 
   useEffect(() => {
     drawCanvas();
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('mouseup', mouseUpHandler);
+    return () => window.removeEventListener('mouseup', mouseUpHandler);
   }, []);
 
   return (
@@ -67,21 +90,23 @@ const Canvas: FC<CanvasProps> = (props) => {
           <img
             src="/images/laptop.png"
             alt=""
-            className="h-[432px] w-[768px]"
+            className="h-[432px] w-[768px] tv-image"
           />
           <div
-            className="w-[662px] max-h-[366px] overflow-auto absolute top-[22px] left-[53px]"
+            className="w-[662px] max-h-[366px] overflow-auto absolute top-[22px] left-[53px] "
             ref={canvasContainerRef}
           >
-            <div className="problem">
+            <div>
               <canvas
                 ref={canvas}
                 width={canvasWidth}
                 height={canvasHeight}
-                className=" h-[750px]"
+                className=" h-[750px] cursor-grab"
                 style={{
                   transition: 'all 1s',
                 }}
+                onMouseDown={mouseDownHandler}
+                onMouseUp={mouseUpHandler}
               />
             </div>
           </div>
