@@ -10,8 +10,8 @@ const Zoom = () => {
   const relocateCanvasHandler = (el: any) => {
     const data = coordinateDetails[el];
     canvasContainerRef.current.scrollTo({
-      top: data.y,
-      left: data.x,
+      top: data.y - 50,
+      left: data.x - 50,
       behavior: 'smooth',
     });
   };

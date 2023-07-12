@@ -4,6 +4,7 @@ import { CanvasProps } from './types';
 const Canvas: FC<CanvasProps> = (props) => {
   const fontUrl = `${process.env.PUBLIC_URL}/fonts/AvenirHeavy.woff2`;
   const canvas = useRef<HTMLCanvasElement | any>(null);
+  const tvImageRef = useRef();
   const {
     canvasHeight,
     canvasWidth,
@@ -12,7 +13,7 @@ const Canvas: FC<CanvasProps> = (props) => {
     resetCanvasPosition,
     canvasContainerRef,
   } = props;
-  let startX: any, startY: any, scrollX: any, scrollY: any;
+  let startX: number, startY: number, scrollX: number, scrollY: number;
   const customFont = new FontFace('Avenir', `url(${fontUrl})`);
 
   // Canvas drawing
@@ -90,7 +91,8 @@ const Canvas: FC<CanvasProps> = (props) => {
           <img
             src="/images/laptop.png"
             alt=""
-            className="h-[432px] w-[768px] tv-image"
+            className="h-[432px] w-[768px] tv-image pointer-events-none"
+            draggable={false}
           />
           <div
             className="w-[662px] max-h-[366px] overflow-auto absolute top-[22px] left-[53px] "
